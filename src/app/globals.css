@@ -1,26 +1,144 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Ninja brand colors for direct utility usage (Tailwind v4) */
+  --color-ninja-dark: #0C1623;
+  --color-ninja-blue-dark: #1B2C3D;
+  --color-ninja-steel: #3A5F8A;
+  --color-ninja-glow: #2CA8E2;
+  --color-ninja-gray: #AAB2BC;
+  --color-ninja-white: #FFFFFF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* === GOLD LEE NINJA LIGHT MODE === */
+  --radius: 0.625rem;
+
+  /* background and text */
+  --background: #F9FAFB; /* very light version of ninja-gray */
+  --foreground: #0C1623; /* ninja-dark */
+
+  /* cards / popovers */
+  --card: #FFFFFF;
+  --card-foreground: #1B2C3D;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #1B2C3D;
+
+  /* main accents */
+  --primary: #2CA8E2; /* ninja-glow (eyes blue) */
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #AAB2BC; /* ninja-gray */
+  --secondary-foreground: #0C1623;
+
+  --muted: #E4E6E9;
+  --muted-foreground: #3A5F8A;
+
+  --accent: #3A5F8A; /* ninja-steel */
+  --accent-foreground: #FFFFFF;
+
+  /* borders / inputs */
+  --border: #AAB2BC;
+  --input: #AAB2BC;
+  --ring: #2CA8E2;
+
+  /* charts (example colors) */
+  --chart-1: #2CA8E2;
+  --chart-2: #3A5F8A;
+  --chart-3: #1B2C3D;
+  --chart-4: #AAB2BC;
+  --chart-5: #0C1623;
+
+  /* sidebar */
+  --sidebar: #F9FAFB;
+  --sidebar-foreground: #0C1623;
+  --sidebar-primary: #2CA8E2;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #3A5F8A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #AAB2BC;
+  --sidebar-ring: #2CA8E2;
+}
+
+.dark {
+  /* === GOLD LEE NINJA DARK MODE === */
+  --background: #0C1623; /* ninja-dark */
+  --foreground: #FFFFFF; /* text light */
+
+  --card: #1B2C3D; /* deep navy */
+  --card-foreground: #FFFFFF;
+
+  --popover: #1B2C3D;
+  --popover-foreground: #FFFFFF;
+
+  --primary: #2CA8E2; /* glowing cyan-blue */
+  --primary-foreground: #0C1623;
+
+  --secondary: #3A5F8A; /* steel blue */
+  --secondary-foreground: #FFFFFF;
+
+  --muted: #1B2C3D;
+  --muted-foreground: #AAB2BC;
+
+  --accent: #2CA8E2;
+  --accent-foreground: #0C1623;
+
+  --border: #3A5F8A;
+  --input: #3A5F8A;
+  --ring: #2CA8E2;
+
+  --chart-1: #2CA8E2;
+  --chart-2: #3A5F8A;
+  --chart-3: #AAB2BC;
+  --chart-4: #1B2C3D;
+  --chart-5: #0C1623;
+
+  --sidebar: #1B2C3D;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #2CA8E2;
+  --sidebar-primary-foreground: #0C1623;
+  --sidebar-accent: #3A5F8A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #3A5F8A;
+  --sidebar-ring: #2CA8E2;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+    @apply transition-colors duration-300;
+  }
 }
