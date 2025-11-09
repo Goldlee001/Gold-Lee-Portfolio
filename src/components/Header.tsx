@@ -18,17 +18,29 @@ export default function Header() {
   const [visits, setVisits] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/api/visits")
-      .then((res) => res.json())
-      .then((data) => setVisits(data.count))
-      .catch(console.error);
+    async function recordAndLoadVisits() {
+      try {
+        await fetch("/api/visits", { method: "POST" });
+      } catch (e) {
+        // ignore; analytics best-effort
+      }
+      try {
+        const res = await fetch("/api/visits");
+        const data = await res.json();
+        // API returns { today, week, total }
+        if (typeof data?.total === "number") setVisits(data.total);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    recordAndLoadVisits();
   }, []);
 
   const NAV_ITEMS = [
     { id: "home", label: "Home", icon: <Home className="w-4 h-4" /> },
-    { id: "projects", label: "Projects", icon: <FolderKanban className="w-4 h-4" /> },
-    { id: "skills", label: "Skills", icon: <Wrench className="w-4 h-4" /> },
     { id: "about", label: "About", icon: <User className="w-4 h-4" /> },
+    { id: "skills", label: "Skills", icon: <Wrench className="w-4 h-4" /> },
+    { id: "projects", label: "Projects", icon: <FolderKanban className="w-4 h-4" /> },
     { id: "contact", label: "Contact", icon: <Mail className="w-4 h-4" /> },
   ];
 
@@ -38,16 +50,10 @@ export default function Header() {
     <>
       {/* 🌟 Desktop Header (top) */}
       <motion.header
-        initial={{ y: -40, opacity: 0 }}
+        initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="
-          hidden md:flex items-center justify-between 
-          px-6 py-3 border-b backdrop-blur-xl shadow-lg
-          bg-ninja-white/90 border-ninja-steel
-          dark:bg-ninja-dark/90 dark:border-ninja-steel/60
-          sticky top-0 z-50
-        "
+        className="hidden md:flex items-center justify-between px-6 py-3 border-b backdrop-blur-xl shadow-lg bg-ninja-white/90 border-ninja-steel dark:bg-ninja-dark/90 dark:border-ninja-steel/60 sticky top-0 z-50"
       >
         {/* Left: Logo */}
         <div className="flex items-center gap-3 select-none">
@@ -57,12 +63,7 @@ export default function Header() {
               src="/logo.png"
               alt="Gold Lee Logo"
               fill
-              className="
-                object-contain 
-                transition-all duration-500
-                drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)]
-                dark:drop-shadow-[0_0_10px_#2CA8E2]
-              "
+              className="object-contain transition-all duration-500 drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_0_10px_#2CA8E2]"
               priority
             />
           </div>
@@ -94,18 +95,11 @@ export default function Header() {
           <Greeting />
           <div className="relative cursor-pointer">
             <Bell
-              className="
-                w-4 h-4 transition-colors duration-300
-                text-ninja-steel hover:text-ninja-glow
-                dark:text-ninja-white dark:hover:text-ninja-glow
-              "
+              className="w-4 h-4 transition-colors duration-300 text-ninja-steel hover:text-ninja-glow dark:text-ninja-white dark:hover:text-ninja-glow"
             />
             {visits > 0 && (
               <span
-                className="
-                  absolute -top-2 -right-2 text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center shadow-md
-                  bg-ninja-glow text-ninja-dark
-                "
+                className="absolute -top-2 -right-2 text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center shadow-md bg-ninja-glow text-ninja-dark"
               >
                 {visits}
               </span>

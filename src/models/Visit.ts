@@ -1,8 +1,11 @@
 import mongoose, { Schema, models } from "mongoose";
 
-const visitSchema = new Schema({
-  date: { type: String, required: true }, // e.g. "2025-11-08"
-  count: { type: Number, default: 0 },
-});
+const VisitSchema = new Schema(
+  {
+    ip: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-export const Visit = models.Visit || mongoose.model("Visit", visitSchema);
+const Visit = models.Visit || mongoose.model("Visit", VisitSchema);
+export default Visit;

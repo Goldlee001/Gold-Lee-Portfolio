@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import HeroBackground from "./HeroBackground";
 import { ArrowRight, Download, Github, Linkedin, Mail } from "lucide-react";
 
 export default function Hero() {
@@ -9,6 +10,9 @@ export default function Hero() {
       id="home"
       className="relative min-h-screen flex flex-col md:flex-row items-center justify-center gap-10 px-6 sm:px-12 text-center md:text-left overflow-hidden bg-gradient-to-b from-ninja-white to-white dark:from-ninja-dark dark:to-black"
     >
+      {/* ✨ Animated Background */}
+      <HeroBackground />
+      
       {/* 💫 Floating Orbs */}
       <motion.div
         initial={false}
@@ -96,7 +100,7 @@ export default function Hero() {
       >
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full overflow-hidden border-4 border-[#2CA8E2] shadow-lg">
           <Image
-            src="/images/profile.jpg"
+            src="/images/profile.png"
             alt="GOLD LEE portrait"
             fill
             className="object-cover"

@@ -1,6 +1,12 @@
 import Header from "@/components/Header";
 import StickyNav from "@/components/StickyNav";
 import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Skills from "@/components/Skills";
+import Projects from "@/components/Projects";
+import Experience from "@/components/Experience";
+import Education from "@/components/Education";
+import Contact from "@/components/Contact";
 
 export default function HomePage() {
   return (
@@ -14,15 +20,14 @@ export default function HomePage() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Example other section */}
-      <section id="projects" className="min-h-screen px-6 py-24 bg-gray-50 dark:bg-gray-950">
-        <h2 className="text-3xl font-bold text-center mb-6 text-purple-600 dark:text-purple-400">
-          Projects
-        </h2>
-        <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-gray-400">
-          This is where your future projects will be displayed.
-        </p>
-      </section>
+<About />
+<Skills />
+<Projects />
+<Experience />
+<Education />
+<Contact />
+
+
     </main>
   );
 }

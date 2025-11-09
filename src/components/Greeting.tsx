@@ -47,7 +47,7 @@ export default function Greeting() {
 
   const speakGreeting = () => {
     const utter = new SpeechSynthesisUtterance(
-      "Initializing access... Welcome to Gold Lee’s world — a realm of creativity, power, and pure innovation. Here, vision meets mastery — and you’re about to see what he does best."
+      "Initializing access... Connection secured. Welcome to Gold Lee’s World — where creativity meets power, and innovation becomes art. This is more than a showcase — it’s a realm of mastery, built with vision, precision, and purpose. Step inside, and experience excellence redefined."
     );
     utter.lang = voice?.lang || "en-US";
     utter.rate = 0.95;

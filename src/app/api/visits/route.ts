@@ -1,36 +1,58 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
-import { Visit } from "@/models/Visit";
+import Visit from "@/models/Visit";
 
-export async function GET() {
-  await connectDB();
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-  const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+// Get IP address safely
+function getClientIP(request: Request) {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0] || "unknown";
+}
 
-  // 1️⃣ Increment today’s count
-  let todayDoc = await Visit.findOne({ date: todayStr });
-  if (!todayDoc) {
-    todayDoc = await Visit.create({ date: todayStr, count: 1 });
-  } else {
-    todayDoc.count += 1;
-    await todayDoc.save();
+// Record a visit
+export async function POST(request: Request) {
+  try {
+    await connectDB();
+    const ip = getClientIP(request);
+
+    const cutoff = new Date();
+    cutoff.setHours(cutoff.getHours() - 1);
+
+    // Avoid logging same IP more than once per hour
+    const exists = await Visit.findOne({ ip, createdAt: { $gte: cutoff } });
+    if (!exists) {
+      await Visit.create({ ip });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Error recording visit:", err);
+    return NextResponse.json({ error: "Failed to record visit" }, { status: 500 });
   }
+}
 
-  // 2️⃣ Get stats
-  const allVisits = await Visit.find();
+// Get analytics summary
+export async function GET() {
+  try {
+    await connectDB();
+    const now = new Date();
 
-  const total = allVisits.reduce((sum, v) => sum + v.count, 0);
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
 
-  const weekAgo = new Date();
-  weekAgo.setDate(today.getDate() - 7);
-  const thisWeek = allVisits
-    .filter((v) => new Date(v.date) >= weekAgo)
-    .reduce((sum, v) => sum + v.count, 0);
+    const todayCount = await Visit.countDocuments({ createdAt: { $gte: startOfToday } });
+    const weekCount = await Visit.countDocuments({ createdAt: { $gte: startOfWeek } });
+    const totalCount = await Visit.countDocuments();
 
-  return NextResponse.json({
-    today: todayDoc.count,
-    week: thisWeek,
-    total,
-  });
+    return NextResponse.json({
+      today: todayCount,
+      week: weekCount,
+      total: totalCount,
+    });
+  } catch (err) {
+    console.error("Error fetching visit stats:", err);
+    return NextResponse.json({ error: "Failed to fetch visits" }, { status: 500 });
+  }
 }
